@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CheckmateBegins Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    #chatbox {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    #messages {
+      max-height: 300px;
+      overflow-y: auto;
+      text-align: left;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #2c2c2c;
+      border-radius: 10px;
+    }
+    #messages div {
+      margin: 10px 0;
+    }
+    #messages .user {
+      text-align: right;
+    }
+    #messages .model {
+      text-align: left;
+      color: #90ee90;
+    }
+    #userInput {
+      width: calc(100% - 110px);
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+    #sendButton {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #sendButton:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="chatbox">
+    <h1>CheckmateBegins Chatbot</h1>
+    <div id="messages"></div>
+    <div>
+      <input type="text" id="userInput" placeholder="Type your message here..." />
+      <button id="sendButton">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const apiKey = "AIzaSyDhoME4mcNPUa1CPDKSZDSRJSLjDW7xe6Q";
+    const apiUrl = "https://generativelanguage.googleapis.com/v1beta2/models/text-bison-001:generate";
+
+    // Function to send a message to the chatbot
+    async function sendMessage(userInput) {
+      const response = await fetch(apiUrl + `?key=${apiKey}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: {
+            text: userInput,
+          },
+          temperature: 1,
+          top_p: 0.95,
+          candidate_count: 1,
+        }),
+      });
+
+      if (!response.ok) {
+        return "Error: Unable to fetch response. Check your API key and setup.";
+      }
+
+      const data = await response.json();
+      return data.candidates && data.candidates[0] ? data.candidates[0].output : "No response from the chatbot.";
+    }
+
+    // Event Listener for Button
+    document.getElementById("sendButton").addEventListener("click", async () => {
+      const userInput = document.getElementById("userInput").value.trim();
+      if (!userInput) return;
+
+      const messagesDiv = document.getElementById("messages");
+
+      // Add user message to the chat
+      const userMessage = document.createElement("div");
+      userMessage.className = "user";
+      userMessage.textContent = `User: ${userInput}`;
+      messagesDiv.appendChild(userMessage);
+
+      // Add placeholder for chatbot response
+      const modelMessage = document.createElement("div");
+      modelMessage.className = "model";
+      modelMessage.textContent = "Chatbot: Thinking...";
+      messagesDiv.appendChild(modelMessage);
+
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      // Get chatbot response
+      const response = await sendMessage(userInput);
+      modelMessage.textContent = `Chatbot: ${response}`;
+
+      // Clear input field
+      document.getElementById("userInput").value = "";
+    });
+  </script>
+</body>
+</html>
