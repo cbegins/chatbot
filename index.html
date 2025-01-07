@@ -7,30 +7,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Anonymous Chat</h1>
-        <div id="chat-controls">
-            <button id="new-chat-button">Create New Chat</button>
-            <div id="join-chat-form" style="display: none;">
-                <input type="text" id="join-chat-id" placeholder="Enter Chat ID">
-                <button id="join-chat-button">Join Chat</button>
-            </div>
-        </div>
+    <div class="app-container">
+        <header>
+            <h1>Anonymous Chat</h1>
+        </header>
 
-        <div id="chat-area" style="display: none;">
-            <h2>Chat ID: <span id="current-chat-id"></span></h2>
-            <div id="messages"></div>
-            <div id="message-input-area">
-                <input type="text" id="message" placeholder="Type your message...">
-                <button id="send-button">Send</button>
-            </div>
-            <button id="leave-chat-button">Leave Chat</button>
-        </div>
+        <main>
+            <section id="chat-controls">
+                <button id="new-chat-button">Start New Chat</button>
+                <div id="join-chat-form" style="display: none;">
+                    <input type="text" id="join-chat-id" placeholder="Enter Chat ID">
+                    <button id="join-chat-button">Join</button>
+                </div>
+            </section>
+
+            <section id="chat-area" style="display: none;">
+                <div class="chat-header">
+                    <h2>Chat ID: <span id="current-chat-id"></span></h2>
+                    <button id="leave-chat-button" class="secondary">Leave Chat</button>
+                </div>
+                <div id="messages"></div>
+                <div id="message-input-area">
+                    <input type="text" id="message" placeholder="Type your message...">
+                    <button id="send-button" class="primary">Send</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2023 CheckmateBegins. All rights reserved.</p>
+        </footer>
     </div>
-
-    <footer>
-        © 2023 CheckmateBegins. All rights reserved.
-    </footer>
 
     <script src="script.js"></script>
 </body>
