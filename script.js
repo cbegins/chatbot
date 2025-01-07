@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let messageCheckInterval;
 
     newChatButton.addEventListener('click', () => {
+        newChatButton.disabled = true; // Disable button during request
+        newChatButton.textContent = 'Creating...';
         fetch('chat_handler.php?action=new_chat')
             .then(response => response.text())
             .then(chatId => {
@@ -22,27 +24,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatArea.style.display = 'block';
                 joinChatForm.style.display = 'none';
                 startMessagePolling();
+            })
+            .finally(() => {
+                newChatButton.disabled = false;
+                newChatButton.textContent = 'Start New Chat';
             });
     });
 
     joinChatButton.addEventListener('click', () => {
         const chatId = joinChatIdInput.value.trim();
         if (chatId) {
+            joinChatButton.disabled = true;
+            joinChatButton.textContent = 'Joining...';
             currentChatId = chatId;
             currentChatIdSpan.textContent = chatId;
             chatArea.style.display = 'block';
             joinChatForm.style.display = 'none';
             startMessagePolling();
+            joinChatButton.disabled = false;
+            joinChatButton.textContent = 'Join';
         }
     });
 
     sendButton.addEventListener('click', () => {
         const messageText = messageInput.value.trim();
         if (messageText && currentChatId) {
+            sendButton.disabled = true;
+            sendButton.textContent = 'Sending...';
             fetch(`chat_handler.php?action=send_message&chat_id=${currentChatId}&message=${encodeURIComponent(messageText)}`)
                 .then(() => {
                     messageInput.value = '';
                     // Messages will be fetched by the polling mechanism
+                })
+                .finally(() => {
+                    sendButton.disabled = false;
+                    sendButton.textContent = 'Send';
                 });
         }
     });
